@@ -1,8 +1,9 @@
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Path
 from pydantic import BaseModel
 from typing import List, Annotated
-import models
-from database import engine, SessionLocal
+from quiz import models
+
+from quiz.database import engine, SessionLocal
 from sqlalchemy.orm import Session
 
 app = FastAPI()
@@ -24,10 +25,10 @@ def get_db(): ##Establishing connection to database
         db.close()
 
 
-db_dependency = Annotated(Session, Depends(get_db)) 
+db_dependency = Annotated[Session, Depends(get_db)]
 
 @app.post("/questions/")
-async def create_questions(question: QuestionBase, db: db_dependency): # type: ignore
+async def create_questions(question: QuestionBase, db: db_dependency):
     db_question = models.Questions(question_text=question.question_text)
     db.add(db_question)
     db.commit()
