@@ -24,7 +24,6 @@ def get_db(): ##Establishing connection to database
     finally:
         db.close()
 
-
 db_dependency = Annotated[Session, Depends(get_db)]
 
 @app.post("/questions/")
